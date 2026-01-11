@@ -112,3 +112,4 @@ document.getElementById("amountInput").addEventListener("change", () => {
         objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, tempColor));
     }
 });
+document.getElementById("resetBtn").addEventListener("click", resetSim);
