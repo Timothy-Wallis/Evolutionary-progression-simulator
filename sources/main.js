@@ -26,27 +26,57 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let objects = [];
+let animationController = null;
+let animationEnable = false;
 
 const colors = ["brown", "white"];
-let priorityColor = colors[1];
+let priorityColor = colors[0];
 
 //main loop
 function main(){
+   animationController = requestAnimationFrame(main);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for(let i = 0; i < objects.length; i++){
+        let obj = objects[i];
+        obj.update();
+        ctx.fillStyle = obj.color;
+        ctx.beginPath();
+        ctx.arc(obj.x, obj.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+    }
 }
 
 
 //Start the simulation
 function startSim() {
-
+    if(!animationEnable){
+        animationEnable = true;
+        main();
+        return;
+    }
 }
 
 //Pause the simulation
 function pauseSim() {
-    
+    cancelAnimationFrame(animationController);
+    animationEnable = false;
 }
 //Change color of all objects
 function changePriorityColor() {
-    
+    let label = document.querySelector("label[for='changeColorBtn']");
+    if(priorityColor == colors[0]){
+        priorityColor = colors[1];
+        label.textContent = "Current Color Priority: White";
+    }else{
+        priorityColor = colors[0];
+        label.textContent = "Current Color Priority: Brown";
+    }
+}
+
+function resetSim() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    objects = [];
+    pauseSim();
 }
 
 document.getElementById("startBtn").addEventListener("click", startSim);

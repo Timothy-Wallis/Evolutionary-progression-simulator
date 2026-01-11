@@ -118,7 +118,7 @@ a:hover { text-decoration: underline; }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 { margin: 0 0 var(--space-3); font-weight: 600; }
-h1 { font-size: clamp(1.8rem, 2.5vw, 2.4rem); }
+h1 { font-size: clamp(1.8rem, 2.5vw, 2.4rem);}
 h2 { font-size: clamp(1.5rem, 2.0vw, 2.0rem); }
 h3 { font-size: clamp(1.25rem, 1.6vw, 1.6rem); }
 p { margin: 0 0 var(--space-3); color: var(--color-text); }
@@ -140,7 +140,8 @@ p { margin: 0 0 var(--space-3); color: var(--color-text); }
 
 /* Canvas area */
 canvas {
-	width: 100%;
+	margin: 2.5rem auto;
+	width: 80%;
 	height: auto;
 	background: var(--color-surface);
 	border: 1px solid var(--color-border);
@@ -164,6 +165,9 @@ canvas {
 	--btn-bg: var(--color-surface);
 	--btn-fg: var(--color-text);
 	--btn-border: var(--color-border);
+
+	margin-left: .25rem;
+	margin-right: .25rem;
 
 	display: inline-flex;
 	align-items: center;
@@ -231,7 +235,7 @@ input[type="password"],
 input[type="search"],
 select,
 textarea {
-	width: 100%;
+	width: 25%;
 	padding: 10px 12px;
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius);
@@ -277,3 +281,11 @@ input[disabled], select[disabled], textarea[disabled] { opacity: 0.6; cursor: no
 .p-3  { padding: var(--space-3); }
 .p-4  { padding: var(--space-4); }
 
+#licenseInfo {
+	font-size: .8rem;
+	margin-top: 2rem;
+	color: var(--color-text);
+	background-color: var(--color-surface);
+	padding: 1rem;
+	border-radius: var(--radius);
+}

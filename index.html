@@ -7,13 +7,28 @@
     <link rel="stylesheet" href="sources/styles/style.css">
 </head>
 <body>
-    <h1>Progression Simulation</h1>
+    <h1 style="margin: auto; text-align: center; padding: 1rem;">Progression Simulation</h1>
+    <hr>
     <canvas>HTML5 is not supported by your browser. Please use a new browser</canvas>
-    <input type="button" id="startBtn" value="Start Simulation"/>
-    <input type="button" id="pauseBtn" value="Pause Simulation"/>
-    <input type="button" id="changeColorBtn" value="Change Color"/>
-    <label for="amountInput">Number of insects to simulate:</label>
-    <input type="number" id="amountInput" max="50" min="4" value="20" />
+    <div style="margin: auto; text-align: center; padding-bottom: 1rem;">
+    <input type="button" id="startBtn" value="Start Simulation" class="btn"/>
+    <input type="button" id="pauseBtn" value="Pause Simulation" class="btn"/>
+    <input type="button" id="resetBtn" value="Reset Simulation" class="btn"/>
+    </div>
+    <div>
+    <label for="amountInput" style="margin-left: 1rem;">Number of insects to simulate:</label>
+    </div><input type="number" id="amountInput" max="50" min="4" value="20" style="margin-left: 1rem;"/>
+    <div style="padding-top: 1rem; padding-bottom: .5rem; margin-left: 1rem;">
+    <label for="changeColorBtn">Current Color Priority: Brown</label>
+    </div>
+    <input type="button" id="changeColorBtn" value="Change Color" class="btn" style="margin-left: 1rem;"/>
     <script src="sources/main.js"></script>
+    <footer id="licenseInfo">
+        <p>Licensed under MIT License</p>
+        <p>Created on Github Timothy-Wallis</p>
+        <p>Any distribution of this software must include this license information</p>
+        <p>Version info: 1.0.1</p>
+        <p>Further breakdown of version info can be viewed on Github</p>
+    </footer>
 </body>
 </html>
