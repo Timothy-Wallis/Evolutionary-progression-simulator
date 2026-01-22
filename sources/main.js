@@ -1,3 +1,4 @@
+let controller = 0;
 class Obj {
     constructor(x, y, timer, color){
         this.x = x;
@@ -12,6 +13,7 @@ class Obj {
             return;
         }
         this.color = "transparent";
+        controller++;
         delete this;
         return;
     }
@@ -25,12 +27,11 @@ class Obj {
         if(this.y + posy < 0 || this.y + posy > canvas.height){
             posy = -posy;
         }
-
+        
         this.x += posx;
         this.y += posy;
     }
 }
-
 let canvas = document.querySelector("canvas");
 let ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -41,7 +42,7 @@ let animationController = null;
 let animationEnable = false;
 let prgmRun = false;
 let timer = 500; //Timer used for each iteration
-let iterationCount = 0;
+let iterationCount = 1;
 
 const colors = ["brown", "white"];
 let priorityColor = colors[0];
@@ -61,15 +62,45 @@ function main(){
     }
     ctx.fillStyle = "blue";
     ctx.font = "24px Arial";
-    ctx.fillText(`Current Iteration: ${iterationCount}`, 10, 20);
+    ctx.fillText(`Current Year: ${iterationCount}`, 10, 20);
     if(timer <= 0){
         timer = 500;
         iterationCount++;
-        updateRenderArray();
+        let additiveBrown = Math.floor(countType(colors[0]) / 2);
+        let additiveWhite = Math.floor(countType(colors[1]) / 2);
+        for(let i = 0; i < additiveBrown; i++){
+            let randomTimer;
+            if(priorityColor == colors[0]){
+                randomTimer = Math.floor((Math.random() - .25) * 1000 + 500);
+            }else{
+                randomTimer = Math.floor((Math.random() - .5) * 1000 + 500);
+            }
+            objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, colors[0]));
+        }
+        for(let i = 0; i < additiveWhite; i++){
+            if(priorityColor == colors[1]){
+                randomTimer = Math.floor((Math.random() - .25) * 1000 + 500);
+            }else{
+                randomTimer = Math.floor((Math.random() - .5) * 1000 + 500);
+            }
+            objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, colors[1]));
+        }
+
     }
 }
 
-
+function countType(colorType){
+    let colorCount = {
+        brown: 0,
+        white: 0
+    }
+    for(let i = 0; i < objects.length; i++){
+        if(objects[i].color == colorType){
+            colorCount[colorType]++;
+        }
+    }
+    return colorCount[colorType];
+}
 
 
 //Start the simulation
@@ -131,9 +162,23 @@ function resetSim() {
     objects = [];
     pauseSim();
     prgmRun = false;
+    iterationCount = 0;
 }
 
 document.getElementById("startBtn").addEventListener("click", startSim);
 document.getElementById("pauseBtn").addEventListener("click", pauseSim);
 document.getElementById("changeColorBtn").addEventListener("click", changePriorityColor);
 document.getElementById("resetBtn").addEventListener("click", resetSim);
+
+//Correct current input values
+function checkNumberInput(inputElement, min, max){
+    let currVal = parseInt(inputElement.value);
+    if(currVal < min){
+        inputElement.value = min;
+    }else if(currVal > max){
+        inputElement.value = max;
+    }
+}
+
+document.getElementById("amountInput").addEventListener("change", () => checkNumberInput(document.getElementById("amountInput"), 4, 50));
+document.getElementById("lifeSpanInput").addEventListener("change", () => checkNumberInput(document.getElementById("lifeSpanInput"), 100, 2000));
