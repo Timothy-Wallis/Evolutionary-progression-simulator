@@ -36,12 +36,13 @@ let canvas = document.querySelector("canvas");
 let ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+let lifeSpanInput = document.getElementById("lifeSpanInput").value;
 
 let objects = [];
 let animationController = null;
 let animationEnable = false;
 let prgmRun = false;
-let timer = 500; //Timer used for each iteration
+let timer = lifeSpanInput; //Timer used for each iteration
 let iterationCount = 1;
 
 const colors = ["brown", "white"];
@@ -64,24 +65,24 @@ function main(){
     ctx.font = "24px Arial";
     ctx.fillText(`Current Year: ${iterationCount}`, 10, 20);
     if(timer <= 0){
-        timer = 500;
+        timer = lifeSpanInput;
         iterationCount++;
         let additiveBrown = Math.floor(countType(colors[0]) / 2);
         let additiveWhite = Math.floor(countType(colors[1]) / 2);
         for(let i = 0; i < additiveBrown; i++){
             let randomTimer;
             if(priorityColor == colors[0]){
-                randomTimer = Math.floor((Math.random() - .25) * 1000 + 500);
+                randomTimer = Math.floor((Math.random() - .25) * 1000 + timer);
             }else{
-                randomTimer = Math.floor((Math.random() - .5) * 1000 + 500);
+                randomTimer = Math.floor((Math.random() - .5) * 1000 + timer);
             }
             objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, colors[0]));
         }
         for(let i = 0; i < additiveWhite; i++){
             if(priorityColor == colors[1]){
-                randomTimer = Math.floor((Math.random() - .25) * 1000 + 500);
+                randomTimer = Math.floor((Math.random() - .25) * 1000 + timer);
             }else{
-                randomTimer = Math.floor((Math.random() - .5) * 1000 + 500);
+                randomTimer = Math.floor((Math.random() - .5) * 1000 + timer);
             }
             objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, colors[1]));
         }
