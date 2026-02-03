@@ -1,8 +1,8 @@
-# Evolutionary Progressive Simulator
-A simulation program that allows for the user to represent evolutionary traits using an example trait of moths, specifically with their colored genomes. This is an open sourced project.
+# Environment Simulations
+A simulation program used for any series of methods for teaching, especially about the environment itself.
 Free use is allowed for any teacher, or to use as is. 
 Program terms of use is specified within the MIT license.
 ## Usage 
-This program is meant to be used within a classroom setting, to teach these evolutionary traits at a basic level
+This program is meant to be used within a classroom setting, to teach about ecosystems
 ## Website Access 
-Access this website via vercel: [Evolutionary Sim](https://evolutionsim.vercel.app/)
+Access this website via vercel: [Ecosystem Simulations](https://ecosystemsim.vercel.app)
