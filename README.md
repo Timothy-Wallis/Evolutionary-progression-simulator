@@ -1,5 +1,5 @@
-# Evolutionary Progressive Simulator
-A simulation program that allows for the user to represent evolutionary traits using an example trait of moths, specifically with their colored genomes. This is an open sourced project.
+# Environment Simulations
+A simulation program used for any series of methods for teaching, especially about the environment itself.
 Free use is allowed for any teacher, or to use as is. 
 Program terms of use is specified within the MIT license.
 ## Usage 
