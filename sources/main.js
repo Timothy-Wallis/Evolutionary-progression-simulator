@@ -9,7 +9,7 @@ class Obj {
     update(){
         if(this.timer > 0){
             this.moveRandom();
-            this.timer--;
+            this.timer -= deltaTime.update();
             return;
         }
         this.color = "transparent";
@@ -18,8 +18,8 @@ class Obj {
         return;
     }
     moveRandom(){
-        let posx = (Math.random() - 0.5) * 10;
-        let posy = (Math.random() - 0.5) * 10;
+        let posx = (Math.random() - 0.5) * 1.5;
+        let posy = (Math.random() - 0.5) * 1.5;
 
         if(this.x + posx < 0 || this.x + posx > canvas.width){
             posx = -posx;
@@ -32,11 +32,25 @@ class Obj {
         this.y += posy;
     }
 }
+
+class DeltaTime {
+    constructor(){
+        this.startTime = performance.now();
+        this.timestamp = this.startTime;
+    }
+    update(){
+        let now = performance.now();
+        this.delta = now - this.timestamp;
+        this.timestamp = now;
+        return this.delta;
+    }
+}
 let canvas = document.querySelector("canvas");
 let ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let lifeSpanInput = document.getElementById("lifeSpanInput").value;
+let deltaTime = new DeltaTime();
 
 let objects = [];
 let animationController = null;
@@ -50,7 +64,7 @@ let priorityColor = colors[0];
 
 //main loop
 function main(){
-    timer--;
+    timer -= deltaTime.update();
    animationController = requestAnimationFrame(main);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(let i = 0; i < objects.length; i++){
@@ -67,26 +81,21 @@ function main(){
     if(timer <= 0){
         timer = lifeSpanInput;
         iterationCount++;
-        let additiveBrown = Math.floor(countType(colors[0]) / 2);
-        let additiveWhite = Math.floor(countType(colors[1]) / 2);
-        for(let i = 0; i < additiveBrown; i++){
-            let randomTimer;
-            if(priorityColor == colors[0]){
-                randomTimer = Math.floor((Math.random() - .25) * 1000 + timer);
-            }else{
-                randomTimer = Math.floor((Math.random() - .5) * 1000 + timer);
-            }
-            objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, colors[0]));
-        }
-        for(let i = 0; i < additiveWhite; i++){
-            if(priorityColor == colors[1]){
-                randomTimer = Math.floor((Math.random() - .25) * 1000 + timer);
-            }else{
-                randomTimer = Math.floor((Math.random() - .5) * 1000 + timer);
-            }
-            objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, colors[1]));
-        }
+        ColorAddItems(colors[0]);
+        ColorAddItems(colors[1]);
+    }
+}
 
+function ColorAddItems(colorType){
+    let count = countType(colorType);
+    for(let i = 0; i < Math.floor(count / 2); i++){
+        let randomTimer;
+        if(priorityColor == colorType){
+            randomTimer = Math.floor((Math.random() - .01) * 1000 + timer);
+        }else{
+            randomTimer = Math.floor((Math.random() - .7) * 1000 + timer);
+        }
+        objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, colorType));
     }
 }
 
@@ -133,9 +142,9 @@ function updateRenderArray(){
             tempColor = colors[1];
         }
         if(tempColor == priorityColor){
-            randomTimer = Math.floor((Math.random() - .25) * 1000 + 500);
+            randomTimer = Math.floor((Math.random() - .25) * 1000 + timer);
         }else{
-            randomTimer = Math.floor((Math.random() - .5) * 1000 + 500);
+            randomTimer = Math.floor((Math.random() - .5) * 1000 + timer);
         }
         objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, tempColor));
     }
@@ -182,4 +191,4 @@ function checkNumberInput(inputElement, min, max){
 }
 
 document.getElementById("amountInput").addEventListener("change", () => checkNumberInput(document.getElementById("amountInput"), 4, 50));
-document.getElementById("lifeSpanInput").addEventListener("change", () => checkNumberInput(document.getElementById("lifeSpanInput"), 100, 2000));
+document.getElementById("lifeSpanInput").addEventListener("change", () => checkNumberInput(document.getElementById("lifeSpanInput"), 1000, 10000));
