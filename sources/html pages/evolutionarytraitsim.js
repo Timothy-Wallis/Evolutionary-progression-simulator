@@ -1,3 +1,5 @@
+import DeltaTime from "./assets/deltatime.js";
+
 class Obj {
     constructor(x, y, timer, color){
         this.x = x;
@@ -8,11 +10,11 @@ class Obj {
     update(){
         if(this.timer > 0){
             this.moveRandom();
-            this.timer -= deltaTime.update();
+            this.timer--;
             return;
         }
         this.color = "transparent";
-        delete this;
+        delete this;        
         return;
     }
     moveRandom(){
@@ -30,21 +32,6 @@ class Obj {
         this.y += posy;
     }
 }
-
-class DeltaTime {
-    constructor(){
-        this.startTime = performance.now();
-        this.timestamp = this.startTime;
-    }
-    update(){
-        let now = performance.now();
-        this.delta = now - this.timestamp;
-        this.timestamp = now;
-        return this.delta;
-    }
-}
-
-
 let canvas = document.querySelector("canvas");
 let ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -52,20 +39,23 @@ canvas.height = window.innerHeight;
 let lifeSpanInput = document.getElementById("lifeSpanInput").value;
 let deltaTime = new DeltaTime();
 
+
 let objects = [];
 let animationController = null;
 let animationEnable = false;
 let prgmRun = false;
 let timer = lifeSpanInput; //Timer used for each iteration
 let iterationCount = 1;
+let timeline = [];
 
 const colors = ["brown", "white"];
 let priorityColor = colors[0];
 
 //main loop
 function main(){
+    console.log("Running Main Loop");
     timer -= deltaTime.update();
-   animationController = requestAnimationFrame(main);
+    animationController = requestAnimationFrame(main);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(let i = 0; i < objects.length; i++){
         let obj = objects[i];
@@ -75,12 +65,13 @@ function main(){
         ctx.arc(obj.x, obj.y, 5, 0, Math.PI * 2);
         ctx.fill();
     }
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "skyblue";
     ctx.font = "24px Arial";
-    ctx.fillText(`Current Year: ${iterationCount}`, 10, 20);
+    ctx.fillText(`Current Year: ${iterationCount} | White: ${countType("white")} | Brown: ${countType("brown")}`, 20, 40);
     if(timer <= 0){
         timer = lifeSpanInput;
         iterationCount++;
+        timeline.push({year: iterationCount, brown: countType("brown"), white: countType("white")});
         ColorAddItems(colors[0]);
         ColorAddItems(colors[1]);
     }
@@ -91,9 +82,9 @@ function ColorAddItems(colorType){
     for(let i = 0; i < Math.floor(count / 2); i++){
         let randomTimer;
         if(priorityColor == colorType){
-            randomTimer = Math.floor((Math.random() - .01) * 1000 + timer);
+            randomTimer = Math.floor((Math.random() - .01) * timer + 1000);
         }else{
-            randomTimer = Math.floor((Math.random() - .7) * 1000 + timer);
+            randomTimer = Math.floor((Math.random() - .25) * timer + 1000);
         }
         objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, colorType));
     }
@@ -142,9 +133,9 @@ function updateRenderArray(){
             tempColor = colors[1];
         }
         if(tempColor == priorityColor){
-            randomTimer = Math.floor((Math.random() - .25) * 1000 + timer);
+            randomTimer = Math.floor((Math.random() - .01) * timer + 1000);
         }else{
-            randomTimer = Math.floor((Math.random() - .5) * 1000 + timer);
+            randomTimer = Math.floor((Math.random() - .25) * timer + 1000);
         }
         objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, tempColor));
     }
@@ -160,10 +151,10 @@ function changePriorityColor() {
     let label = document.querySelector("label[for='changeColorBtn']");
     if(priorityColor == colors[0]){
         priorityColor = colors[1];
-        label.textContent = "Current Color Priority: White";
+        label.textContent = "Current Color: White";
     }else{
         priorityColor = colors[0];
-        label.textContent = "Current Color Priority: Brown";
+        label.textContent = "Current Color: Brown";
     }
 }
 
@@ -192,3 +183,27 @@ function checkNumberInput(inputElement, min, max){
 
 document.getElementById("amountInput").addEventListener("change", () => checkNumberInput(document.getElementById("amountInput"), 4, 50));
 document.getElementById("lifeSpanInput").addEventListener("change", () => checkNumberInput(document.getElementById("lifeSpanInput"), 1000, 10000));
+document.getElementById("graphBtn").addEventListener("click", generateGraph);
+
+let graphOpen = false;
+
+function generateGraph(){
+    if(graphOpen){
+        graphOpen = false;
+        document.getElementById("graphBtn").value = "Show Graph";
+        main();
+    }else{
+        graphOpen = true;
+    document.getElementById("graphBtn").value = "Close Graph";
+    pauseSim();
+    //Graph Code
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.fillRect(canvas.width / 4, canvas.height / 4, canvas.width / 2, canvas.height / 2);
+    ctx.strokeStyle = "black";
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 4 + 10, canvas.height / 4 + 10);
+    ctx.lineTo(canvas.width / 4 + 10, canvas.height / 2 - 10);
+    ctx.lineTo(canvas.width / 2 - 10, canvas.height / 2 - 10);
+    ctx.stroke();
+    //Plot Data
+}}
