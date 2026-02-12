@@ -1,37 +1,6 @@
 import DeltaTime from "./assets/deltatime.js";
+import Obj from "./assets/obj.js";
 
-class Obj {
-    constructor(x, y, timer, color){
-        this.x = x;
-        this.y = y;
-        this.timer = timer;
-        this.color = color;
-    }
-    update(){
-        if(this.timer > 0){
-            this.moveRandom();
-            this.timer--;
-            return;
-        }
-        this.color = "transparent";
-        delete this;        
-        return;
-    }
-    moveRandom(){
-        let posx = (Math.random() - 0.5) * 1.5;
-        let posy = (Math.random() - 0.5) * 1.5;
-
-        if(this.x + posx < 0 || this.x + posx > canvas.width){
-            posx = -posx;
-        }
-        if(this.y + posy < 0 || this.y + posy > canvas.height){
-            posy = -posy;
-        }
-        
-        this.x += posx;
-        this.y += posy;
-    }
-}
 let canvas = document.querySelector("canvas");
 let ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -39,12 +8,11 @@ canvas.height = window.innerHeight;
 let lifeSpanInput = document.getElementById("lifeSpanInput").value;
 let deltaTime = new DeltaTime();
 
-
 let objects = [];
 let animationController = null;
 let animationEnable = false;
 let prgmRun = false;
-let timer = lifeSpanInput; //Timer used for each iteration
+let timer = lifeSpanInput / 2; //Timer used for each iteration
 let iterationCount = 1;
 let timeline = [];
 
@@ -53,7 +21,6 @@ let priorityColor = colors[0];
 
 //main loop
 function main(){
-    console.log("Running Main Loop");
     timer -= deltaTime.update();
     animationController = requestAnimationFrame(main);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -69,7 +36,7 @@ function main(){
     ctx.font = "24px Arial";
     ctx.fillText(`Current Year: ${iterationCount} | White: ${countType("white")} | Brown: ${countType("brown")}`, 20, 40);
     if(timer <= 0){
-        timer = lifeSpanInput;
+        timer = lifeSpanInput / 2;
         iterationCount++;
         timeline.push({year: iterationCount, brown: countType("brown"), white: countType("white")});
         ColorAddItems(colors[0]);
@@ -80,12 +47,7 @@ function main(){
 function ColorAddItems(colorType){
     let count = countType(colorType);
     for(let i = 0; i < Math.floor(count / 2); i++){
-        let randomTimer;
-        if(priorityColor == colorType){
-            randomTimer = Math.floor((Math.random() - .01) * timer + 1000);
-        }else{
-            randomTimer = Math.floor((Math.random() - .25) * timer + 1000);
-        }
+        let randomTimer = randomTime(colorType);
         objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, colorType));
     }
 }
@@ -132,11 +94,7 @@ function updateRenderArray(){
         }else{
             tempColor = colors[1];
         }
-        if(tempColor == priorityColor){
-            randomTimer = Math.floor((Math.random() - .01) * timer + 1000);
-        }else{
-            randomTimer = Math.floor((Math.random() - .25) * timer + 1000);
-        }
+        randomTimer = randomTime(tempColor);
         objects.push(new Obj(Math.random() * canvas.width, Math.random() * canvas.height, randomTimer, tempColor));
     }
 }
@@ -207,3 +165,13 @@ function generateGraph(){
     ctx.stroke();
     //Plot Data
 }}
+
+function randomTime(colorType ){
+    let randomTimerVal;
+    if(priorityColor == colorType){
+        randomTimerVal = Math.floor((Math.random() - .2) * timer + 100);
+    }else{
+        randomTimerVal = Math.floor((Math.random() - .5) * timer + 100);
+    }
+    return randomTimerVal;
+}
